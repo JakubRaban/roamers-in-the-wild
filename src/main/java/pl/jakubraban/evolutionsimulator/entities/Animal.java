@@ -8,16 +8,49 @@ import java.util.*;
 
 public class Animal {
 
+    public static final int DEFAULT_STARTING_ENERGY = 1000;
+
     private final String name;
     private Position position;
     private int remainingEnergy;
     private MapDirection facingTowards;
-    private final Gene gene;
+    private final Genes genes;
     private final Species species;
     private final Gender gender;
 
     private final int daySpawned;
-    private int lifetime;
+    private final int lifetime = 0;
+
+    public Animal(Position position, int daySpawned) {
+        this.daySpawned = daySpawned;
+        this.position = position;
+        this.name = RandomnessHandler.randomName(8);
+        this.remainingEnergy = DEFAULT_STARTING_ENERGY;
+        this.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
+        this.genes = new Genes();
+        this.species = Species.UNSPECIFIED;
+        this.gender = Gender.UNSPECIFIED;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public int getRemainingEnergy() {
+        return remainingEnergy;
+    }
+
+    public MapDirection getFacingDirection() {
+        return facingTowards;
+    }
+
+    public Genes getGenes() {
+        return genes;
+    }
 
     private enum Species {
         UNSPECIFIED;
@@ -27,14 +60,14 @@ public class Animal {
         MALE, FEMALE, UNSPECIFIED;
     }
 
-    private class Gene {
+    private class Genes {
 
         public static final int MAX_GENE_VALUE = 10;
-        private Map<Integer, Integer> geneValues = new HashMap<>();
+        private Map<Integer, Integer> genesValues = new HashMap<>();
 
-        public Gene() {
+        public Genes() {
             for(int i = 0; i <= 7; i++) {
-                geneValues.put(i, RandomnessHandler.randomIntFromRange(0, 10));
+                genesValues.put(i, RandomnessHandler.randomIntFromRange(0, 10));
             }
         }
 

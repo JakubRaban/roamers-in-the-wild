@@ -1,6 +1,7 @@
 package pl.jakubraban.evolutionsimulator.entities;
 
 import pl.jakubraban.evolutionsimulator.map.MapDirection;
+import pl.jakubraban.evolutionsimulator.map.MoveDirection;
 import pl.jakubraban.evolutionsimulator.randomness.RandomnessHandler;
 
 import java.util.HashMap;
@@ -10,15 +11,15 @@ public class Animal {
 
     public static final int DEFAULT_STARTING_ENERGY = 1000;
 
-    private final String name;
+    private String name;
     private int remainingEnergy;
     private MapDirection facingTowards;
-    private final Genes genes;
-    private final Species species;
-    private final Gender gender;
+    private Genes genes;
+    private Species species;
+    private Gender gender;
 
-    private final int daySpawned;
-    private final int lifetime = 0;
+    private int daySpawned;
+    private int lifetime = 0;
 
     public Animal(int daySpawned) {
         this.daySpawned = daySpawned;
@@ -28,6 +29,25 @@ public class Animal {
         this.genes = new Genes();
         this.species = Species.UNSPECIFIED;
         this.gender = Gender.UNSPECIFIED;
+    }
+
+    public Animal reproduce(int currentDay) {
+        try {
+            if (this.remainingEnergy >= 200) {
+                Animal babyAnimal = (Animal) this.clone();
+                babyAnimal.getGenes().mutate();
+                babyAnimal.name = RandomnessHandler.randomName(8);
+                babyAnimal.remainingEnergy /= 2;
+                this.remainingEnergy /= 2;
+                babyAnimal.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
+                babyAnimal.daySpawned = currentDay;
+                return babyAnimal;
+            } else {
+                return null;
+            }
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException();
+        }
     }
 
     public String getName() {
@@ -57,12 +77,24 @@ public class Animal {
     private class Genes {
 
         public static final int MAX_GENE_VALUE = 10;
-        private Map<Integer, Integer> genesValues = new HashMap<>();
+        private Map<MoveDirection, Integer> genesMap = new HashMap<>();
 
         public Genes() {
             for(int i = 0; i <= 7; i++) {
-                genesValues.put(i, RandomnessHandler.randomIntFromRange(0, 10));
+                genesMap.put(MoveDirection.values()[i], RandomnessHandler.randomIntFromRange(0, MAX_GENE_VALUE));
             }
+        }
+
+        public void mutate() {
+            Map<MoveDirection, Integer> newGenesMap = new HashMap<>();
+            MoveDirection pickedDirection = RandomnessHandler.randomElementFromList(MoveDirection.valueList());
+            for(Map.Entry<MoveDirection, Integer> entry : genesMap.entrySet()) {
+                if(entry.getKey().equals(pickedDirection)) {
+                    newGenesMap.put(entry.getKey(), entry.getValue() + RandomnessHandler.randomIntFromRange(-1, 1));
+                }
+                newGenesMap.put(entry.getKey(), entry.getValue());
+            }
+            genesMap = newGenesMap;
         }
 
     }

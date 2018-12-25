@@ -2,6 +2,7 @@ package pl.jakubraban.evolutionsimulator.map;
 
 import pl.jakubraban.evolutionsimulator.entities.Animal;
 import pl.jakubraban.evolutionsimulator.entities.Plant;
+import pl.jakubraban.evolutionsimulator.randomness.Probability;
 
 import java.util.*;
 
@@ -42,7 +43,15 @@ public class WorldMap {
     }
     
     private enum Biome {
-        STEPPE, JUNGLE;
+        STEPPE(1, new Probability(100)), JUNGLE(1, new Probability(100));
+
+        private final int plantsSpawnedPerDay;
+        private final Probability spawningProbabilityForEach;
+
+        Biome(int plantsSpawnedPerDay, Probability spawningProbabilityForEach) {
+            this.plantsSpawnedPerDay = plantsSpawnedPerDay;
+            this.spawningProbabilityForEach = spawningProbabilityForEach;
+        }
     }
 
 }

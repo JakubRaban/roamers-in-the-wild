@@ -12,7 +12,7 @@ public enum MoveDirection {
         return this.name();
     }
 
-    public List<MoveDirection> valueList() {
+    public static List<MoveDirection> valueList() {
         return new ArrayList<>(Arrays.asList(MoveDirection.values()));
     }
 

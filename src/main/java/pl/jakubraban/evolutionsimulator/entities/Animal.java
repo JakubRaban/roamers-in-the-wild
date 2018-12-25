@@ -1,17 +1,16 @@
 package pl.jakubraban.evolutionsimulator.entities;
 
 import pl.jakubraban.evolutionsimulator.map.MapDirection;
-import pl.jakubraban.evolutionsimulator.map.Position;
 import pl.jakubraban.evolutionsimulator.randomness.RandomnessHandler;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Animal {
 
     public static final int DEFAULT_STARTING_ENERGY = 1000;
 
     private final String name;
-    private Position position;
     private int remainingEnergy;
     private MapDirection facingTowards;
     private final Genes genes;
@@ -21,9 +20,8 @@ public class Animal {
     private final int daySpawned;
     private final int lifetime = 0;
 
-    public Animal(Position position, int daySpawned) {
+    public Animal(int daySpawned) {
         this.daySpawned = daySpawned;
-        this.position = position;
         this.name = RandomnessHandler.randomName(8);
         this.remainingEnergy = DEFAULT_STARTING_ENERGY;
         this.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
@@ -34,10 +32,6 @@ public class Animal {
 
     public String getName() {
         return name;
-    }
-
-    public Position getPosition() {
-        return position;
     }
 
     public int getRemainingEnergy() {

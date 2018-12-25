@@ -1,8 +1,6 @@
 package pl.jakubraban.evolutionsimulator.randomness;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class RandomnessHandler {
 
@@ -16,6 +14,17 @@ public class RandomnessHandler {
     public static <T> T randomElementFromList(List<T> list) {
         int drawnIndex = randomIntFromRange(0, list.size() - 1);
         return list.get(drawnIndex);
+    }
+
+    public static <T> T randomElementByProbability(Map<T, Probability> probabilityMap) {
+        if(probabilityMap.values().stream().mapToInt(Probability::getProbabilityInPercent).sum() != 100)
+            throw new IllegalArgumentException("Bad sum of probabilities");
+        List<T> probabilityInducedList = new LinkedList<>();
+        for(Map.Entry<T, Probability> entry: probabilityMap.entrySet()) {
+            int probabilityInPercent = entry.getValue().getProbabilityInPercent();
+            for(int i = 0; i < probabilityInPercent; i++) probabilityInducedList.add(entry.getKey());
+        }
+        return randomElementFromList(probabilityInducedList);
     }
 
     public static String randomName(int length) {

@@ -109,6 +109,14 @@ public class WorldMap {
             this.plantsSpawnedPerDay = plantsSpawnedPerDay;
             this.spawningProbabilityForEach = spawningProbabilityForEach;
         }
+
+        public int getPlantsSpawnedPerDay() {
+            return plantsSpawnedPerDay;
+        }
+
+        public Probability getSpawningProbabilityForEach() {
+            return spawningProbabilityForEach;
+        }
     }
 
 

@@ -7,7 +7,7 @@ import pl.jakubraban.evolutionsimulator.randomness.RandomnessHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Animal {
+public class Animal implements Cloneable {
 
     public static final int DEFAULT_STARTING_ENERGY = 1000;
 
@@ -34,8 +34,8 @@ public class Animal {
     public Animal reproduce(int currentDay) {
         try {
             if (this.remainingEnergy >= 200) {
-                Animal babyAnimal = (Animal) this.clone();
-                babyAnimal.getGenes().mutate();
+                Animal babyAnimal = (Animal) super.clone();
+                babyAnimal.genes = this.getGenes().mutate();
                 babyAnimal.name = RandomnessHandler.randomName(8);
                 babyAnimal.remainingEnergy /= 2;
                 this.remainingEnergy /= 2;
@@ -85,16 +85,23 @@ public class Animal {
             }
         }
 
-        public void mutate() {
-            Map<MoveDirection, Integer> newGenesMap = new HashMap<>();
+        private Genes(Map<MoveDirection, Integer> genesMap) {
+            this.genesMap = genesMap;
+        }
+
+        public Genes mutate() {
             MoveDirection pickedDirection = RandomnessHandler.randomElementFromList(MoveDirection.valueList());
-            for(Map.Entry<MoveDirection, Integer> entry : genesMap.entrySet()) {
-                if(entry.getKey().equals(pickedDirection)) {
-                    newGenesMap.put(entry.getKey(), entry.getValue() + RandomnessHandler.randomIntFromRange(-1, 1));
-                }
-                newGenesMap.put(entry.getKey(), entry.getValue());
+            int geneDifference = RandomnessHandler.randomIntFromRange(-1, 1);
+            System.out.println(pickedDirection + ", " + geneDifference);
+            int toBeChanged = genesMap.get(pickedDirection);
+            int newValue = toBeChanged + geneDifference;
+            if(newValue < 0) newValue = 0;
+            Map<MoveDirection, Integer> newGenesMap = new HashMap<>();
+            for(Map.Entry<MoveDirection, Integer> gene : genesMap.entrySet()) {
+                if(gene.getKey().equals(pickedDirection)) newGenesMap.put(gene.getKey(), gene.getValue() + geneDifference);
+                else newGenesMap.put(gene.getKey(), gene.getValue());
             }
-            genesMap = newGenesMap;
+            return new Genes(newGenesMap);
         }
 
     }

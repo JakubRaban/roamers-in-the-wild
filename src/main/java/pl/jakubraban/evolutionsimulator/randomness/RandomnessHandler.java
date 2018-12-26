@@ -12,8 +12,13 @@ public class RandomnessHandler {
     }
 
     public static <T> T randomElementFromList(List<T> list) {
-        int drawnIndex = randomIntFromRange(0, list.size() - 1);
-        return list.get(drawnIndex);
+        return randomNElementsFromList(list, 1).get(0);
+    }
+
+    public static <T> List<T> randomNElementsFromList(List<T> list, final int N) {
+        if(N <= 0 || list.size() < N) throw new IllegalArgumentException();
+        Collections.shuffle(list);
+        return list.subList(0, N);
     }
 
     public static <T> T randomElementByProbability(Map<T, Probability> probabilityMap) {
@@ -25,6 +30,14 @@ public class RandomnessHandler {
             for(int i = 0; i < probabilityInPercent; i++) probabilityInducedList.add(entry.getKey());
         }
         return randomElementFromList(probabilityInducedList);
+    }
+
+    public static <T> T randomElementByRelativeProbability(Map<T, Integer> probabilityMap) {
+        List<T> repeatingElementsByProbability = new LinkedList<>();
+        for(Map.Entry<T, Integer> entry : probabilityMap.entrySet()) {
+            for(int i = 1; i <= entry.getValue(); i++) repeatingElementsByProbability.add(entry.getKey());
+        }
+        return randomElementFromList(repeatingElementsByProbability);
     }
 
     public static String randomName(int length) {

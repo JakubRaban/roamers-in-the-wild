@@ -1,5 +1,7 @@
 package pl.jakubraban.evolutionsimulator.randomness;
 
+import java.util.Random;
+
 public class Probability {
 
     private int probabilityInPercent;
@@ -11,5 +13,9 @@ public class Probability {
 
     public int getProbabilityInPercent() {
         return probabilityInPercent;
+    }
+
+    public boolean roulette() {
+        return new Random().nextInt(100) + 1 <= getProbabilityInPercent();
     }
 }

@@ -7,4 +7,8 @@ public class World {
     private WorldMap worldMap;
     private int daysElapsed;
 
+    public void simulateNewDay() {
+
+    }
+
 }

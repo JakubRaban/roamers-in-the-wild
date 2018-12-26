@@ -66,13 +66,22 @@ public class Animal implements Cloneable {
         return genes;
     }
 
+
+
+
     private enum Species {
         UNSPECIFIED;
     }
 
+
+
+
     private enum Gender {
         MALE, FEMALE, UNSPECIFIED;
     }
+
+
+
 
     private class Genes {
 
@@ -98,7 +107,7 @@ public class Animal implements Cloneable {
             if(newValue < 0) newValue = 0;
             Map<MoveDirection, Integer> newGenesMap = new HashMap<>();
             for(Map.Entry<MoveDirection, Integer> gene : genesMap.entrySet()) {
-                if(gene.getKey().equals(pickedDirection)) newGenesMap.put(gene.getKey(), gene.getValue() + geneDifference);
+                if(gene.getKey().equals(pickedDirection)) newGenesMap.put(gene.getKey(), newValue);
                 else newGenesMap.put(gene.getKey(), gene.getValue());
             }
             return new Genes(newGenesMap);

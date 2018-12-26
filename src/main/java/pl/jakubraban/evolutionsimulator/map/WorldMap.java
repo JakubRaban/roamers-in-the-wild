@@ -25,6 +25,19 @@ public class WorldMap {
         if(width < 10 || height < 10) throw new IllegalArgumentException("Map would be too small");
         this.xSize = width;
         this.ySize = height;
+        List<Position> positionsWithinMap = getAllPositionsInside();
+        for(Position position : positionsWithinMap) {
+            Biome biomeToAssign = getBiomeForPosition(position);
+            biomes.put(position, biomeToAssign);
+        }
+    }
+
+    private Biome getBiomeForPosition(Position position) {
+        int mapMiddleX = this.xSize / 2;
+        int mapMiddleY = this.ySize / 2;
+        if(position.getX() >= mapMiddleX - 5 && position.getX() <= mapMiddleX + 4 && position.getY() >= mapMiddleY - 5 && position.getY() <= mapMiddleY + 4)
+            return Biome.JUNGLE;
+        else return Biome.STEPPE;
     }
 
     public boolean containsPosition(Position position) {
@@ -41,7 +54,10 @@ public class WorldMap {
         }
         return allPositions;
     }
-    
+
+
+
+
     private enum Biome {
         STEPPE(1, new Probability(100)), JUNGLE(1, new Probability(100));
 
@@ -53,5 +69,7 @@ public class WorldMap {
             this.spawningProbabilityForEach = spawningProbabilityForEach;
         }
     }
+
+
 
 }

@@ -2,6 +2,7 @@ package pl.jakubraban.evolutionsimulator.entities;
 
 import pl.jakubraban.evolutionsimulator.map.MapDirection;
 import pl.jakubraban.evolutionsimulator.map.MoveDirection;
+import pl.jakubraban.evolutionsimulator.map.Position;
 import pl.jakubraban.evolutionsimulator.randomness.RandomnessHandler;
 
 import java.util.HashMap;
@@ -12,6 +13,8 @@ public class Animal implements Cloneable {
     public static final int DEFAULT_STARTING_ENERGY = 1000;
 
     private String name;
+
+    private Position position;
     private int remainingEnergy;
     private MapDirection facingTowards;
     private Genes genes;
@@ -21,7 +24,8 @@ public class Animal implements Cloneable {
     private int daySpawned;
     private int lifetime = 0;
 
-    public Animal(int daySpawned) {
+    public Animal(Position position, int daySpawned) {
+        setPosition(position);
         this.daySpawned = daySpawned;
         this.name = RandomnessHandler.randomName(8);
         this.remainingEnergy = DEFAULT_STARTING_ENERGY;
@@ -29,6 +33,19 @@ public class Animal implements Cloneable {
         this.genes = new Genes();
         this.species = Species.UNSPECIFIED;
         this.gender = Gender.UNSPECIFIED;
+    }
+
+    public void move() {
+        MapDirection currentDirection = getFacingDirection();
+        MoveDirection turningTowards = getTurnDirection();
+        MapDirection newDirection = currentDirection.directionAfterTurning(turningTowards);
+        setPosition(getPosition().add(new Position(newDirection.getXStep(), newDirection.getYStep())));
+        setFacingDirection(newDirection);
+        this.remainingEnergy--;
+    }
+
+    private MoveDirection getTurnDirection() {
+        return RandomnessHandler.randomElementByRelativeProbability(getGenes().getGenesMap());
     }
 
     public Animal reproduce(int currentDay) {
@@ -62,22 +79,34 @@ public class Animal implements Cloneable {
         return facingTowards;
     }
 
-    public Genes getGenes() {
+    private Genes getGenes() {
         return genes;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    private void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public void setFacingDirection(MapDirection facingTowards) {
+        this.facingTowards = facingTowards;
     }
 
 
 
 
     private enum Species {
-        UNSPECIFIED;
+        UNSPECIFIED
     }
 
 
 
 
     private enum Gender {
-        MALE, FEMALE, UNSPECIFIED;
+        MALE, FEMALE, UNSPECIFIED
     }
 
 
@@ -85,12 +114,12 @@ public class Animal implements Cloneable {
 
     private class Genes {
 
-        public static final int MAX_GENE_VALUE = 10;
+        public static final int MAX_STARTING_GENE_VALUE = 10;
         private Map<MoveDirection, Integer> genesMap = new HashMap<>();
 
         public Genes() {
             for(int i = 0; i <= 7; i++) {
-                genesMap.put(MoveDirection.values()[i], RandomnessHandler.randomIntFromRange(0, MAX_GENE_VALUE));
+                genesMap.put(MoveDirection.values()[i], RandomnessHandler.randomIntFromRange(0, MAX_STARTING_GENE_VALUE));
             }
         }
 
@@ -101,7 +130,6 @@ public class Animal implements Cloneable {
         public Genes mutate() {
             MoveDirection pickedDirection = RandomnessHandler.randomElementFromList(MoveDirection.valueList());
             int geneDifference = RandomnessHandler.randomIntFromRange(-1, 1);
-            System.out.println(pickedDirection + ", " + geneDifference);
             int toBeChanged = genesMap.get(pickedDirection);
             int newValue = toBeChanged + geneDifference;
             if(newValue < 0) newValue = 0;
@@ -111,6 +139,10 @@ public class Animal implements Cloneable {
                 else newGenesMap.put(gene.getKey(), gene.getValue());
             }
             return new Genes(newGenesMap);
+        }
+
+        public Map<MoveDirection, Integer> getGenesMap() {
+            return genesMap;
         }
 
     }

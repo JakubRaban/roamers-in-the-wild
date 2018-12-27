@@ -19,8 +19,8 @@ public class MapVisualizer {
         Set<Position> positionsOfAnimals = worldMap.getAnimals().stream().map(Animal::getPosition).collect(Collectors.toSet());
         Set<Position> positionsOfPlants = worldMap.getPlants().keySet();
         StringBuilder mapVisualization = new StringBuilder();
-        for(int x = 0; x < worldMap.getWidth(); x++) {
-            for(int y = worldMap.getHeight() - 1; y >= 0; y--) {
+        for(int y = worldMap.getHeight() - 1; y >= 0; y--) {
+            for(int x = 0; x < worldMap.getWidth(); x++) {
                 Position currentPosition = new Position(x, y);
                 if(positionsOfAnimals.contains(currentPosition)) mapVisualization.append("M");
                 else if(positionsOfPlants.contains(currentPosition)) mapVisualization.append("*");

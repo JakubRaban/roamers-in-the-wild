@@ -16,7 +16,8 @@ public class RandomnessHandler {
     }
 
     public static <T> List<T> randomNElementsFromList(List<T> list, final int N) {
-        if(N <= 0 || list.size() < N) throw new IllegalArgumentException();
+        if(N <= 0) throw new IllegalArgumentException();
+        if(list.size() <= N) return list;
         Collections.shuffle(list);
         return list.subList(0, N);
     }

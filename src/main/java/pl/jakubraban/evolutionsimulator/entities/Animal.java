@@ -21,12 +21,10 @@ public class Animal implements Cloneable {
     private Species species;
     private Gender gender;
 
-    private int daySpawned;
     private int lifetime = 0;
 
-    public Animal(Position position, int daySpawned) {
+    public Animal(Position position) {
         setPosition(position);
-        this.daySpawned = daySpawned;
         this.name = RandomnessHandler.randomName(8);
         this.remainingEnergy = DEFAULT_STARTING_ENERGY;
         this.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
@@ -48,7 +46,7 @@ public class Animal implements Cloneable {
         return RandomnessHandler.randomElementByRelativeProbability(getGenes().getGenesMap());
     }
 
-    public Animal reproduce(int currentDay) {
+    public Animal reproduce() {
         try {
             if (this.ableToReproduce()) {
                 Animal babyAnimal = (Animal) super.clone();
@@ -57,14 +55,22 @@ public class Animal implements Cloneable {
                 babyAnimal.remainingEnergy /= 2;
                 this.remainingEnergy /= 2;
                 babyAnimal.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
-                babyAnimal.daySpawned = currentDay;
+                babyAnimal.lifetime = 0;
                 return babyAnimal;
             } else {
                 return null;
             }
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("That was unexpected ...");
         }
+    }
+
+    public boolean shouldDie() {
+        return lowOnEnergy();
+    }
+
+    private boolean lowOnEnergy() {
+        return getRemainingEnergy() <= 0;
     }
 
     public String getName() {

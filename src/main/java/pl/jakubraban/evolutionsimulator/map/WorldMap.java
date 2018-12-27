@@ -98,7 +98,7 @@ public class WorldMap {
 
     public void removeDeadAnimals() {
         for(Animal animal : animals) {
-            if(animal.getRemainingEnergy() <= 0) animals.remove(animal);
+            if(animal.shouldDie()) animals.remove(animal);
         }
     }
 
@@ -108,10 +108,10 @@ public class WorldMap {
         }
     }
 
-    public void reproduceAnimals(int currentDay) {
+    public void reproduceAnimals() {
         for(Animal animal : animals) {
             Animal baby;
-            if((baby = animal.reproduce(currentDay)) != null) {
+            if((baby = animal.reproduce()) != null) {
                 animals.add(baby);
             }
         }
@@ -138,6 +138,14 @@ public class WorldMap {
                 else if(positionOfAnimal.getX() < 0) animal.setPosition(new Position(getWidth() - 1, positionOfAnimal.getY()));
             }
         }
+    }
+
+    public Set<Animal> getAnimals() {
+        return animals;
+    }
+
+    public Map<Position, Plant> getPlants() {
+        return plants;
     }
 
 

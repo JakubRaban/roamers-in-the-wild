@@ -24,7 +24,7 @@ public class WorldMap {
     }
 
     public WorldMap(int width, int height) {
-        if(width < 10 || height < 10) throw new IllegalArgumentException("Map would be too small");
+        if(width < 15 || height < 15) throw new IllegalArgumentException("Map would be too small");
         this.xSize = width;
         this.ySize = height;
         List<Position> positionsWithinMap = getAllPositionsWithinMap();
@@ -85,8 +85,8 @@ public class WorldMap {
     private List<Position> getUnoccupiedPositions() {
         List<Position> positionsOfAnimals = animals.stream().map(Animal::getPosition).collect(Collectors.toList());
         return biomesAtPositions.keySet().stream()
-                .filter(position -> plants.containsKey(position))
-                .filter(positionsOfAnimals::contains)
+                .filter(position -> !plants.containsKey(position))
+                .filter(position -> !positionsOfAnimals.contains(position))
                 .collect(Collectors.toList());
     }
 
@@ -94,6 +94,50 @@ public class WorldMap {
         return getUnoccupiedPositions().stream()
                 .filter(position -> biomesAtPositions.get(position).equals(biome))
                 .collect(Collectors.toList());
+    }
+
+    public void removeDeadAnimals() {
+        for(Animal animal : animals) {
+            if(animal.getRemainingEnergy() <= 0) animals.remove(animal);
+        }
+    }
+
+    public void moveAnimals() {
+        for(Animal animal : animals) {
+            animal.move();
+        }
+    }
+
+    public void reproduceAnimals(int currentDay) {
+        for(Animal animal : animals) {
+            Animal baby;
+            if((baby = animal.reproduce(currentDay)) != null) {
+                animals.add(baby);
+            }
+        }
+    }
+
+    public void feedAnimals() {
+        for(Animal animal : animals) {
+            Position positionOfAnimal = animal.getPosition();
+            if(plants.get(positionOfAnimal) != null) {
+                Plant eatenPlant = plants.get(positionOfAnimal);
+                animal.addEnergy(eatenPlant.getEnergyStored());
+                plants.remove(positionOfAnimal);
+            }
+        }
+    }
+
+    public void bringAnimalsBackToMap() {
+        for(Animal animal : animals) {
+            Position positionOfAnimal = animal.getPosition();
+            if(!containsPosition(positionOfAnimal)) {
+                if(positionOfAnimal.getY() >= getHeight()) animal.setPosition(new Position(positionOfAnimal.getX(), 0));
+                else if(positionOfAnimal.getY() < 0) animal.setPosition(new Position(positionOfAnimal.getX(), getHeight() - 1));
+                else if(positionOfAnimal.getX() >= getWidth()) animal.setPosition(new Position(0, positionOfAnimal.getY()));
+                else if(positionOfAnimal.getX() < 0) animal.setPosition(new Position(getWidth() - 1, positionOfAnimal.getY()));
+            }
+        }
     }
 
 

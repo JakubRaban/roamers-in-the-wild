@@ -50,7 +50,7 @@ public class Animal implements Cloneable {
 
     public Animal reproduce(int currentDay) {
         try {
-            if (this.remainingEnergy >= 200) {
+            if (this.ableToReproduce()) {
                 Animal babyAnimal = (Animal) super.clone();
                 babyAnimal.genes = this.getGenes().mutate();
                 babyAnimal.name = RandomnessHandler.randomName(8);
@@ -87,13 +87,22 @@ public class Animal implements Cloneable {
         return position;
     }
 
-    private void setPosition(Position position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
     public void setFacingDirection(MapDirection facingTowards) {
         this.facingTowards = facingTowards;
     }
+
+    public void addEnergy(int newEnergy) {
+        this.remainingEnergy += newEnergy;
+    }
+
+    private boolean ableToReproduce() {
+        return getRemainingEnergy() >= 200;
+    }
+
 
 
 

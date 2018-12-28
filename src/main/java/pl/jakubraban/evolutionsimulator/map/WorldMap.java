@@ -97,9 +97,7 @@ public class WorldMap {
     }
 
     public void removeDeadAnimals() {
-        for(Animal animal : animals) {
-            if(animal.shouldDie()) animals.remove(animal);
-        }
+        animals.removeIf(Animal::shouldDie);
     }
 
     public void moveAnimals() {
@@ -109,7 +107,8 @@ public class WorldMap {
     }
 
     public void reproduceAnimals() {
-        for(Animal animal : animals) {
+        Animal[] animalList = animals.toArray(new Animal[0]);
+        for(Animal animal : animalList) {
             Animal baby;
             if((baby = animal.reproduce()) != null) {
                 animals.add(baby);
@@ -133,9 +132,9 @@ public class WorldMap {
             Position positionOfAnimal = animal.getPosition();
             if(!containsPosition(positionOfAnimal)) {
                 if(positionOfAnimal.getY() >= getHeight()) animal.setPosition(new Position(positionOfAnimal.getX(), 0));
-                else if(positionOfAnimal.getY() < 0) animal.setPosition(new Position(positionOfAnimal.getX(), getHeight() - 1));
-                else if(positionOfAnimal.getX() >= getWidth()) animal.setPosition(new Position(0, positionOfAnimal.getY()));
-                else if(positionOfAnimal.getX() < 0) animal.setPosition(new Position(getWidth() - 1, positionOfAnimal.getY()));
+                if(positionOfAnimal.getY() < 0) animal.setPosition(new Position(positionOfAnimal.getX(), getHeight() - 1));
+                if(positionOfAnimal.getX() >= getWidth()) animal.setPosition(new Position(0, positionOfAnimal.getY()));
+                if(positionOfAnimal.getX() < 0) animal.setPosition(new Position(getWidth() - 1, positionOfAnimal.getY()));
             }
         }
     }
@@ -146,6 +145,10 @@ public class WorldMap {
 
     public Map<Position, Plant> getPlants() {
         return plants;
+    }
+
+    public void addAnimal() {
+        animals.add(new Animal(randomPositionWithinMap()));
     }
 
 

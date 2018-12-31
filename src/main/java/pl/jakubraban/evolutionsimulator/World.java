@@ -43,8 +43,10 @@ public class World {
             world.simulateNewDay();
             window.setText(visualizer.visualize() + "\n\nDzień " + world.daysElapsed);
             try {
-                if(world.daysElapsed % 5000 == 0) Thread.sleep(5000);
-                else Thread.sleep(10);
+                if(world.daysElapsed % 5000 == 0) {
+                    Thread.sleep(5000);
+                }
+               // else Thread.sleep(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

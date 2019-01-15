@@ -2,10 +2,13 @@ package pl.jakubraban.evolutionsimulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements KeyListener {
 
     private JTextArea outputField = new JTextArea();
+    private JTextField inputField;
 
     public Window() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,10 +23,42 @@ public class Window extends JFrame {
         outputField.setEditable(false);
         outputField.setFont(new Font("Consolas", Font.PLAIN, 14));
         add(scrollPane, BorderLayout.CENTER);
+
+        inputField = new JTextField();
+        inputField.setVisible(true);
+        inputField.setBackground(Color.BLACK);
+        inputField.setForeground(Color.white);
+        inputField.setFont(new Font("Consolas", Font.PLAIN, 16));
+        inputField.setCaretColor(Color.WHITE);
+        inputField.setBorder(null);
+        inputField.addKeyListener(this);
+        add(inputField, BorderLayout.SOUTH);
     }
 
     public void setText(String t) {
         outputField.setText(t);
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            String typed = inputField.getText();
+            try {
+                int number = Integer.parseInt(typed);
+                World.setDelay(number);
+            } catch(NumberFormatException nfe) {
+                System.out.println("Zła liczba");
+            }
+        }
+    }
 }

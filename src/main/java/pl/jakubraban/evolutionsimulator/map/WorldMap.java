@@ -42,12 +42,12 @@ public class WorldMap {
         else return Biome.STEPPE;
     }
 
-    public boolean containsPosition(Position position) {
+    private boolean containsPosition(Position position) {
         return position.getX() >= 0 && position.getX() >= 0
                 && position.getX() < this.getWidth() && position.getX() < this.getHeight();
     }
 
-    public List<Position> getAllPositionsWithinMap() {
+    private List<Position> getAllPositionsWithinMap() {
         List<Position> allPositions = new LinkedList<>();
         for(int x = 0; x < getWidth(); x++) {
             for(int y = 0; y < getHeight(); y++) {
@@ -64,7 +64,7 @@ public class WorldMap {
                 .collect(Collectors.toList());
     }
 
-    public Position randomPositionWithinMap() {
+    private Position randomPositionWithinMap() {
         return RandomnessHandler.randomElementFromList(getAllPositionsWithinMap());
     }
 
@@ -119,8 +119,8 @@ public class WorldMap {
     public void feedAnimals() {
         for(Animal animal : animals) {
             Position positionOfAnimal = animal.getPosition();
-            if(plants.get(positionOfAnimal) != null) {
-                Plant eatenPlant = plants.get(positionOfAnimal);
+            Plant eatenPlant;
+            if((eatenPlant = plants.get(positionOfAnimal)) != null) {
                 animal.addEnergy(eatenPlant.getEnergyStored());
                 plants.remove(positionOfAnimal);
             }
@@ -155,7 +155,7 @@ public class WorldMap {
 
 
     private enum Biome {
-        STEPPE(1, new Probability(100)), JUNGLE(1, new Probability(100));
+        STEPPE(1, new Probability(100)), JUNGLE(1, new Probability(50));
 
         private final int plantsSpawnedPerDay;
         private final Probability spawningProbabilityForEach;

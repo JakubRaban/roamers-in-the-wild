@@ -6,6 +6,7 @@ public class World {
 
     private WorldMap worldMap;
     private int daysElapsed = 0;
+    private static int delay = 100;
 
     public World() {
         worldMap = new WorldMap(100,30);
@@ -33,20 +34,28 @@ public class World {
         return worldMap;
     }
 
+    public static void setDelay(int newDelay) {
+        delay = newDelay;
+    }
+
     public static void main(String ... args) {
         World world = new World();
         Window window = new Window();
-        MapVisualizer visualizer = new MapVisualizer(world.getWorldMap());
+        WorldMap worldMap = world.getWorldMap();
+        MapVisualizer visualizer = new MapVisualizer(worldMap);
         world.bringLife();
-        // for(int i = 0; i < 1000; i++) world.simulateNewDay();
         while(true) {
             world.simulateNewDay();
-            window.setText(visualizer.visualize() + "\n\nDzień " + world.daysElapsed);
+            window.setText(visualizer.visualize() + "\n\n" +
+                    "Dzień " + world.daysElapsed + "\n" +
+                    "Zwierzęta: " + worldMap.getAnimals().size() + "\n" +
+                    "Rośliny: " + worldMap.getPlants().size());
             try {
                 if(world.daysElapsed % 5000 == 0) {
                     Thread.sleep(5000);
+                } else {
+                    Thread.sleep(delay);
                 }
-               // else Thread.sleep(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

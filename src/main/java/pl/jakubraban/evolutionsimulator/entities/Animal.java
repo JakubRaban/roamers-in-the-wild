@@ -143,14 +143,14 @@ public class Animal implements Cloneable {
         }
 
         public Genes mutate() {
-            MoveDirection pickedDirection = RandomnessHandler.randomElementFromList(MoveDirection.valueList());
+            MoveDirection pickedDirectionToBeChanged = RandomnessHandler.randomElementFromList(MoveDirection.valueList());
             int geneDifference = RandomnessHandler.randomIntFromRange(-1, 1);
-            int toBeChanged = genesMap.get(pickedDirection);
+            int toBeChanged = genesMap.get(pickedDirectionToBeChanged);
             int newValue = toBeChanged + geneDifference;
             if(newValue < 0) newValue = 0;
             Map<MoveDirection, Integer> newGenesMap = new HashMap<>();
             for(Map.Entry<MoveDirection, Integer> gene : genesMap.entrySet()) {
-                if(gene.getKey().equals(pickedDirection)) newGenesMap.put(gene.getKey(), newValue);
+                if(gene.getKey().equals(pickedDirectionToBeChanged)) newGenesMap.put(gene.getKey(), newValue);
                 else newGenesMap.put(gene.getKey(), gene.getValue());
             }
             return new Genes(newGenesMap);

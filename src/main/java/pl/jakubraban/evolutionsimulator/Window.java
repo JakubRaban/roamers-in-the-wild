@@ -55,7 +55,9 @@ public class Window extends JFrame implements KeyListener {
             String typed = inputField.getText();
             try {
                 int number = Integer.parseInt(typed);
-                World.setDelay(number);
+                if(number >= 0) {
+                    World.setDelay(number);
+                }
             } catch(NumberFormatException nfe) {
                 System.out.println("Zła liczba");
             }

@@ -9,15 +9,18 @@ public class Window extends JFrame implements KeyListener {
 
     private JTextArea outputField = new JTextArea();
     private JTextField inputField;
+    private CommandExecutor executor;
 
-    public Window() {
+    public Window(CommandExecutor executor) {
+        this.executor = executor;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(1200, 800));
-        setTitle("Where Is My Judgment");
+        setTitle("Generator");
         setVisible(true);
+
         JScrollPane scrollPane = new JScrollPane(outputField);
         scrollPane.setSize(1200, 800);
-        //scrollPane.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.WHITE));
         outputField.setBackground(Color.BLACK);
         outputField.setForeground(Color.WHITE);
         outputField.setEditable(false);
@@ -32,7 +35,12 @@ public class Window extends JFrame implements KeyListener {
         inputField.setCaretColor(Color.WHITE);
         inputField.setBorder(null);
         inputField.addKeyListener(this);
+        inputField.requestFocusInWindow();
         add(inputField, BorderLayout.SOUTH);
+    }
+
+    public void setExecutor(CommandExecutor executor) {
+        this.executor = executor;
     }
 
     public void setText(String t) {
@@ -52,15 +60,8 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-            String typed = inputField.getText();
-            try {
-                int number = Integer.parseInt(typed);
-                if(number >= 0) {
-                    World.setDelay(number);
-                }
-            } catch(NumberFormatException nfe) {
-                System.out.println("Zła liczba");
-            }
+            executor.execute(inputField.getText());
+            inputField.setText("");
         }
     }
 }

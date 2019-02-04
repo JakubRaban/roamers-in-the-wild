@@ -5,6 +5,7 @@ import pl.jakubraban.evolutionsimulator.map.MoveDirection;
 import pl.jakubraban.evolutionsimulator.map.Position;
 import pl.jakubraban.evolutionsimulator.randomness.RandomnessHandler;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class Animal implements Cloneable {
         this.facingTowards = RandomnessHandler.randomElementFromList(MapDirection.valueList());
         this.genes = new Genes();
         this.species = Species.UNSPECIFIED;
-        this.gender = Gender.UNSPECIFIED;
+        this.gender = RandomnessHandler.randomElementFromList(Arrays.asList(Gender.MALE, Gender.FEMALE));
     }
 
     public void move() {
@@ -39,7 +40,7 @@ public class Animal implements Cloneable {
         MapDirection newDirection = currentDirection.directionAfterTurning(turningTowards);
         setPosition(getPosition().add(new Position(newDirection.getXStep(), newDirection.getYStep())));
         setFacingDirection(newDirection);
-        this.remainingEnergy--;
+        this.remainingEnergy --;
     }
 
     private MoveDirection getTurnDirection() {
@@ -121,7 +122,7 @@ public class Animal implements Cloneable {
 
 
     private enum Gender {
-        MALE, FEMALE, UNSPECIFIED
+        MALE, FEMALE, PREFER_NOT_TO_DISCLOSE
     }
 
 

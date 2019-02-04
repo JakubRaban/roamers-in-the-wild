@@ -1,8 +1,6 @@
-package pl.jakubraban.evolutionsimulator;
+package pl.jakubraban.evolutionsimulator.map;
 
 import pl.jakubraban.evolutionsimulator.entities.Animal;
-import pl.jakubraban.evolutionsimulator.map.Position;
-import pl.jakubraban.evolutionsimulator.map.WorldMap;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -44,7 +44,7 @@ public class CommandExecutor {
     }
 
     private void bringLife() {
-        world.bringLife();
+        world.spawnSingleAnimal();
     }
 
 }

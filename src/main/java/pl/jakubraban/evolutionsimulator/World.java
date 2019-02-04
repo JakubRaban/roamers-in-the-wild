@@ -26,7 +26,7 @@ public class World {
         return daysElapsed;
     }
 
-    public void bringLife() {
+    public void spawnSingleAnimal() {
         worldMap.addAnimal();
     }
 
@@ -45,7 +45,7 @@ public class World {
     public void restartGame() {
         worldMap = new WorldMap(100,30);
         daysElapsed = 0;
-        bringLife();
+        spawnSingleAnimal();
         Main.updateWorld(this);
     }
 

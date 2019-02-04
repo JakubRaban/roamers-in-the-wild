@@ -1,18 +1,19 @@
 package pl.jakubraban.evolutionsimulator;
 
+import pl.jakubraban.evolutionsimulator.map.MapVisualizer;
 import pl.jakubraban.evolutionsimulator.map.WorldMap;
 
 public class Main {
 
-    static World world;
-    static CommandExecutor executor;
-    static Window window;
-    static WorldMap worldMap;
-    static MapVisualizer visualizer;
+    private static World world;
+    private static CommandExecutor executor;
+    private static Window window;
+    private static WorldMap worldMap;
+    private static MapVisualizer visualizer;
 
     public static void main(String ... args) {
         updateWorld(new World());
-        world.bringLife();
+        world.spawnSingleAnimal();
         while(true) {
             world.simulateNewDay();
             window.setText(visualizer.visualize() + "\n\n" +
